@@ -20,7 +20,7 @@ class PostControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    @DisplayName("/post 테스트")
+    @DisplayName("/post 요청시 ok 출력")
     void test() throws Exception {
         mockMvc.perform(post("/post")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -31,5 +31,16 @@ class PostControllerTest {
                 .andDo(print()); //http header 확인
     }
 
+    @Test
+    @DisplayName("/post 요청시 title 필수")
+    void test2() throws Exception {
+        mockMvc.perform(post("/post")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\": \"\", \"content\": \"내용\"}")
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("타이틀을 입력해주세요"))
+                .andDo(print()); //http header 확인
+    }
 
 }
